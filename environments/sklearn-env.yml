@@ -1,0 +1,11 @@
+# environments/sklearn-env.yml
+
+name: sklearn-env
+dependencies:
+  - python=3.8
+  - pip:
+      - pandas
+      - numpy
+      - scikit-learn
+      - xgboost
+      - joblib
