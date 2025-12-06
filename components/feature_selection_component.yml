@@ -1,0 +1,28 @@
+# components/feature_selection_component.yml
+
+name: feature_selection
+display_name: Feature Selection Component
+version: 1
+type: command
+
+inputs:
+  input_data:
+    type: uri_folder   # from prep component output
+
+outputs:
+  output_data:
+    type: uri_folder   # selected_features.csv will be saved here
+
+command: >
+  python src/feature_selection.py
+  --input_data ${{inputs.input_data}}
+  --output_data ${{outputs.output_data}}
+
+environment:
+  conda_file: ../environments/sklearn-env.yml
+  image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04
+
+description: |
+  Performs feature selection for anomaly detection model.
+  Removes identifier fields and overly strong runtime metrics, keeping only
+  realistic operational microservice performance features.

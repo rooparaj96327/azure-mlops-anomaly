@@ -1,0 +1,27 @@
+# components/train_component.yml
+
+name: train_model
+display_name: Train Model Component
+version: 1
+type: command
+
+inputs:
+  training_data:
+    type: uri_folder   # expects folder containing selected_features.csv
+
+outputs:
+  model_output:
+    type: uri_folder   # the trained model will be saved here as model.joblib
+
+command: >
+  python src/train.py
+  --training_data ${{inputs.training_data}}
+  --model_output ${{outputs.model_output}}
+
+environment:
+  conda_file: ../environments/sklearn-env.yml
+  image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04
+
+description: |
+  Trains a RandomForest anomaly detection model using selected features.
+  Outputs a trained model (model.joblib) stored in model_output directory.
