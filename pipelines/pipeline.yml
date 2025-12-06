@@ -1,0 +1,66 @@
+# pipelines/pipeline.yml
+
+$schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
+type: pipeline
+
+display_name: anomaly_detection_pipeline
+description: End-to-end MLOps pipeline for microservice anomaly detection.
+
+inputs:
+  raw_data:
+    type: uri_file
+    description: "Input raw dataset (clean_lo2_full.csv)"
+  
+  model_type:
+    type: string
+    description: "Model to train: logistic, randomforest, xgboost"
+    default: xgboost
+
+outputs:
+  trained_model:
+    type: mlflow_model
+    description: "Final trained model output"
+
+jobs:
+
+  # -----------------------------
+  # 1. Preprocessing Component
+  # -----------------------------
+  preprocess_step:
+    type: command
+    component: ../components/prep_component.yml
+
+    inputs:
+      input_data: ${{inputs.raw_data}}
+
+    outputs:
+      output_data: ${{outputs.preprocessed_data}}
+
+  
+  # -----------------------------
+  # 2. Feature Selection Component
+  # -----------------------------
+  feature_selection_step:
+    type: command
+    component: ../components/feature_selection_component.yml
+
+    inputs:
+      input_data: ${{jobs.preprocess_step.outputs.output_data}}
+
+    outputs:
+      output_data: ${{outputs.feature_data}}
+
+
+  # -----------------------------
+  # 3. Train Component
+  # -----------------------------
+  train_step:
+    type: command
+    component: ../components/train_component.yml
+
+    inputs:
+      training_data: ${{jobs.feature_selection_step.outputs.output_data}}
+      model_type: ${{inputs.model_type}}
+
+    outputs:
+      model_output: ${{outputs.trained_model}}
