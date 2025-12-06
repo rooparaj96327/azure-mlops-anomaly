@@ -1,0 +1,28 @@
+# components/prep_component.yml
+
+name: preprocess_data
+display_name: Preprocess Dataset (Downsample Majority Class)
+type: command
+version: 1
+
+inputs:
+  input_data:
+    type: uri_file     # Azure ML will pass the dataset path
+
+outputs:
+  output_data:
+    type: uri_folder   # Azure ML will store processed_data.csv here
+
+command: >
+  python src/prep.py
+  --input_data ${{inputs.input_data}}
+  --output_data ${{outputs.output_data}}
+
+environment:
+  conda_file: ../environments/sklearn-env.yml
+  image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04
+
+description: |
+  This component loads the raw dataset, downsamples the majority class (is_anomaly=1),
+  balances it with the minority class, shuffles the rows, and outputs a processed CSV file
+  named 'processed_data.csv' inside the output folder.
