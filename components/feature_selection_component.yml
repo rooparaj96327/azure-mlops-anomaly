@@ -1,28 +1,22 @@
-# components/feature_selection_component.yml
-
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
 name: feature_selection
 display_name: Feature Selection Component
-version: 1
 type: command
+version: 1
+description: Selects relevant features using correlation or other methods.
 
 inputs:
-  input_data:
-    type: uri_folder
-    description: "Folder with processed_data.csv"
+  processed_data:
+    type: mltable   # CHANGED from uri_file → mltable
 
 outputs:
-  output_data:
-    type: uri_folder
-    description: "Folder containing selected_features.csv"
+  selected_data:
+    type: mltable
 
-command: >
-  python src/feature_selection.py
-  --input_data ${{inputs.input_data}}
-  --output_data ${{outputs.output_data}}
+code: ../src
+environment: azureml:AzureML-sklearn-1.3:1
 
-environment:
-  image: mcr.microsoft.com/azureml/sklearn-1.0-ubuntu20.04-py38-cpu
-
-description: |
-  Selects relevant features by removing identifiers or non-numeric 
-  attributes and produces selected_features.csv.
+command: >-
+  python feature_selection.py
+  --processed_data ${{inputs.processed_data}}
+  --selected_data ${{outputs.selected_data}}

@@ -1,68 +1,42 @@
-# pipelines/pipeline.yml
-
 $schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
 type: pipeline
 
-display_name: anomaly_detection_pipeline
-description: End-to-end MLOps pipeline for microservice anomaly detection using preprocessing, feature selection, and model training.
+compute: cpu-cluster
 
 inputs:
   raw_data:
-    type: uri_file
-    description: "Input raw dataset CSV (clean_lo2_full.csv)"
-
+    type: mltable         # CHANGED
   model_type:
     type: string
     default: xgboost
-    enum:
-      - logistic
-      - randomforest
-      - xgboost
-    description: "Choose which ML model to train"
 
 outputs:
   trained_model:
     type: uri_folder
-    description: "Trained model output (model.joblib)"
-
-# -----------------------------
-# Pipeline Steps
-# -----------------------------
 
 jobs:
 
-  # 1. Preprocessing Step
   preprocess_step:
     type: command
-    component: ../components/prep_component.yml
-
+    component: azureml:prep_data:1
     inputs:
-      input_data: ${{inputs.raw_data}}
-
+      input_data: ${{parent.inputs.raw_data}}
     outputs:
-      output_data: ${{outputs.preprocessed_data}}
+      output_data: ${{jobs.preprocess_step.outputs.output_data}}
 
-
-  # 2. Feature Selection Step
   feature_selection_step:
     type: command
-    component: ../components/feature_selection_component.yml
-
+    component: azureml:feature_selection:1
     inputs:
-      input_data: ${{jobs.preprocess_step.outputs.output_data}}
-
+      processed_data: ${{jobs.preprocess_step.outputs.output_data}}
     outputs:
-      output_data: ${{outputs.feature_selected}}
+      selected_data: ${{jobs.feature_selection_step.outputs.selected_data}}
 
-
-  # 3. Training Step
   train_step:
     type: command
-    component: ../components/train_component.yml
-
+    component: azureml:train_model:1
     inputs:
-      training_data: ${{jobs.feature_selection_step.outputs.output_data}}
-      model_type: ${{inputs.model_type}}
-
+      training_data: ${{jobs.feature_selection_step.outputs.selected_data}}
+      model_type: ${{parent.inputs.model_type}}
     outputs:
-      model_output: ${{outputs.trained_model}}
+      model_output: ${{parent.outputs.trained_model}}
