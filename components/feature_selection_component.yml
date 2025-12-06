@@ -7,11 +7,13 @@ type: command
 
 inputs:
   input_data:
-    type: uri_folder   # from prep component output
+    type: uri_folder
+    description: "Folder with processed_data.csv"
 
 outputs:
   output_data:
-    type: uri_folder   # selected_features.csv will be saved here
+    type: uri_folder
+    description: "Folder containing selected_features.csv"
 
 command: >
   python src/feature_selection.py
@@ -19,10 +21,8 @@ command: >
   --output_data ${{outputs.output_data}}
 
 environment:
-  conda_file: ../environments/sklearn-env.yml
-  image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04
+  image: mcr.microsoft.com/azureml/sklearn-1.0-ubuntu20.04-py38-cpu
 
 description: |
-  Performs feature selection for anomaly detection model.
-  Removes identifier fields and overly strong runtime metrics, keeping only
-  realistic operational microservice performance features.
+  Selects relevant features by removing identifiers or non-numeric 
+  attributes and produces selected_features.csv.

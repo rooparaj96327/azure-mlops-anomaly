@@ -12,9 +12,8 @@ inputs:
 
   model_type:
     type: string
-    optional: false
     enum: ["logistic", "randomforest", "xgboost"]
-    description: "Choose which model to train."
+    description: "Choose model to train"
 
 outputs:
   model_output:
@@ -28,10 +27,8 @@ command: >
   --model_type ${{inputs.model_type}}
 
 environment:
-  conda_file: ../environments/sklearn-env.yml
-  image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04
+  image: mcr.microsoft.com/azureml/sklearn-1.0-ubuntu20.04-py38-cpu
 
 description: |
-  Trains a machine learning model for anomaly detection using
-  logistic regression, random forest, or XGBoost based on input parameters.
-  Outputs a model artifact (model.joblib) that can be registered and deployed.
+  Trains a machine learning model using Logistic Regression, 
+  RandomForest, or XGBoost and outputs model.joblib.
