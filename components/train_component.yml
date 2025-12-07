@@ -25,4 +25,4 @@ command: >
   --model_type ${{inputs.model_type}}
 
 environment: 
-  image: mcr.microsoft.com/azureml/sklearn-1.0-ubuntu20.04-py38-cpu
+  image: mcr.microsoft.com/azureml/minimal-ubuntu20.04-py38-cpu-inference:latest
