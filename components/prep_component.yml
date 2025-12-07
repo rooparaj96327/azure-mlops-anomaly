@@ -1,6 +1,6 @@
 # components/prep_component.yml
 
-name: prep_data
+name: prep_data_v2
 display_name: Preprocess Data Component
 version: 1
 type: command

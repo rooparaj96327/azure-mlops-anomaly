@@ -1,6 +1,6 @@
 # components/feature_selection_component.yml
 
-name: feature_selection
+name: feature_selection_v2
 display_name: Feature Selection Component
 version: 1
 type: command

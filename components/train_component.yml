@@ -1,6 +1,6 @@
 # components/train_component.yml
 
-name: train_model
+name: train_model_v2
 display_name: Train Model Component
 version: 1
 type: command
