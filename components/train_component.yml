@@ -2,7 +2,7 @@
 
 name: train_model_v2
 display_name: Train Model Component
-version: 1
+version: 3
 type: command
 
 inputs:

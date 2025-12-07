@@ -2,7 +2,7 @@
 
 name: prep_data_v2
 display_name: Preprocess Data Component
-version: 1
+version: 3
 type: command
 
 inputs:
