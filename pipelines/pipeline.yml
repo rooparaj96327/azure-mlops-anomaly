@@ -4,11 +4,7 @@ experiment_name: anomaly-detection-pipeline
 compute: cpu-cluster1
 
 inputs:
-  raw_data:
-    type: mltable
-  model_type:
-    type: string
-    default: xgboost
+  raw_data: azureml:clean_lo2_full@2
 
 outputs:
   trained_model:
@@ -28,15 +24,15 @@ jobs:
     type: command
     component: azureml:feature_selection@latest
     inputs:
-      processed_data: ${{parent.jobs.preprocess_step.outputs.output_data}}
+      input_data: ${{parent.jobs.preprocess_step.outputs.output_data}}
     outputs:
-      selected_data: ${{parent.jobs.feature_selection_step.outputs.selected_data}}
+      output_data: ${{parent.jobs.feature_selection_step.outputs.output_data}}
 
   train_step:
     type: command
     component: azureml:train_model@latest
     inputs:
-      training_data: ${{parent.jobs.feature_selection_step.outputs.selected_data}}
-      model_type: ${{parent.inputs.model_type}}
+      training_data: ${{parent.jobs.feature_selection_step.outputs.output_data}}
+      model_type: xgboost
     outputs:
       model_output: ${{parent.outputs.trained_model}}
