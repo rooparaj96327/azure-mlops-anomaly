@@ -1,9 +1,11 @@
-# components/prep_component.yml
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
 
 name: prep_data_v2
 display_name: Preprocess Data Component
-version: 3
+version: 4
 type: command
+
+code: ./src
 
 inputs:
   input_data:
@@ -14,13 +16,9 @@ outputs:
     type: mltable
     
 command: >
-  python src/prep.py
+  python prep.py
   --input_data ${{inputs.input_data}}
   --output_data ${{outputs.output_data}}
 
 environment:
   image: mcr.microsoft.com/azureml/minimal-ubuntu20.04-py38-cpu-inference:latest
-
-description: |
-  Preprocess raw dataset by downsampling majority class and creating
-  balanced processed_data.csv for training.

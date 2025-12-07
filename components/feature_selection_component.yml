@@ -1,9 +1,11 @@
-# components/feature_selection_component.yml
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
 
 name: feature_selection_v2
 display_name: Feature Selection Component
-version: 3
+version: 4
 type: command
+
+code: ./src
 
 inputs:
   input_data:
@@ -14,13 +16,9 @@ outputs:
     type: mltable
 
 command: >
-  python src/feature_selection.py
+  python feature_selection.py
   --input_data ${{inputs.input_data}}
   --output_data ${{outputs.output_data}}
 
 environment:
   image: mcr.microsoft.com/azureml/minimal-ubuntu20.04-py38-cpu-inference:latest
-
-description: |
-  Selects relevant features by removing identifiers or non-numeric 
-  attributes and produces selected_features.csv.

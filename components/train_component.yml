@@ -1,9 +1,11 @@
-# components/train_component.yml
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
 
 name: train_model_v2
 display_name: Train Model Component
-version: 3
+version: 4
 type: command
+
+code: ./src
 
 inputs:
   training_data:
@@ -12,17 +14,15 @@ inputs:
   model_type:
     type: string
 
-
 outputs:
   model_output:
     type: uri_folder
-    description: "Folder where model.joblib will be saved"
 
 command: >
-  python src/train.py
+  python train.py
   --training_data ${{inputs.training_data}}
   --model_output ${{outputs.model_output}}
   --model_type ${{inputs.model_type}}
 
-environment: 
+environment:
   image: mcr.microsoft.com/azureml/minimal-ubuntu20.04-py38-cpu-inference:latest

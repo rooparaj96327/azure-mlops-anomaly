@@ -16,7 +16,7 @@ jobs:
 
   preprocess_step:
     type: command
-    component: azureml:prep_data_v2:3
+    component: azureml:prep_data_v2:4
     inputs:
       input_data: ${{parent.inputs.raw_data}}
     outputs:
@@ -25,7 +25,7 @@ jobs:
 
   feature_selection_step:
     type: command
-    component: azureml:feature_selection_v2:3
+    component: azureml:feature_selection_v2:4
     inputs:
       input_data: ${{parent.jobs.preprocess_step.outputs.output_data}}
     outputs:
@@ -34,7 +34,7 @@ jobs:
 
   train_step:
     type: command
-    component: azureml:train_model_v2:3
+    component: azureml:train_model_v2:4
     inputs:
       training_data: ${{parent.jobs.feature_selection_step.outputs.output_data}}
       model_type: xgboost
