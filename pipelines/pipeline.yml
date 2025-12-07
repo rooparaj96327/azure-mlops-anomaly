@@ -5,10 +5,9 @@ compute: cpu-cluster
 
 inputs:
   raw_data:
-    type: mltable         # CHANGED
+    type: mltable
   model_type:
     type: string
-    default: xgboost
 
 outputs:
   trained_model:
@@ -20,23 +19,23 @@ jobs:
     type: command
     component: azureml:prep_data:1
     inputs:
-      input_data: ${{parent.inputs.raw_data}}
+      input_data: ${{ parent.inputs.raw_data }}
     outputs:
-      output_data: ${{jobs.preprocess_step.outputs.output_data}}
+      output_data: ${{ parent.jobs.preprocess_step.outputs.output_data }}
 
   feature_selection_step:
     type: command
     component: azureml:feature_selection:1
     inputs:
-      processed_data: ${{jobs.preprocess_step.outputs.output_data}}
+      processed_data: ${{ parent.jobs.preprocess_step.outputs.output_data }}
     outputs:
-      selected_data: ${{jobs.feature_selection_step.outputs.selected_data}}
+      selected_data: ${{ parent.jobs.feature_selection_step.outputs.selected_data }}
 
   train_step:
     type: command
     component: azureml:train_model:1
     inputs:
-      training_data: ${{jobs.feature_selection_step.outputs.selected_data}}
-      model_type: ${{parent.inputs.model_type}}
+      training_data: ${{ parent.jobs.feature_selection_step.outputs.selected_data }}
+      model_type: ${{ parent.inputs.model_type }}
     outputs:
-      model_output: ${{parent.outputs.trained_model}}
+      model_output: ${{ parent.outputs.trained_model }}
